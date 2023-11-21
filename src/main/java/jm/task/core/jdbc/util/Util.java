@@ -1,50 +1,47 @@
 package jm.task.core.jdbc.util;
 
-import java.sql.Statement;
-
 import jm.task.core.jdbc.model.User;
-import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Configuration;
-import org.hibernate.service.ServiceRegistry;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
-import java.util.Properties;
 
 public class Util {
-    // реализуйте настройку соеденения с БД
-    private static final String PASSWORD_KEY = "db.password";
-    private static final String USER_NAME_KEY = "db.username";
-    private static final String URL_KEY = "db.url";
-    private static SessionFactory sessionFactory;
-
-
-
-    public static Connection open() {
+//         реализуйте настройку соединения с БД
+    public static Connection getNewConnection() {
+        String url = "jdbc:postgresql://localhost:5432/postgres";
+        String user = "postgres";
+        String passwd = "postgres";
         try {
-            return DriverManager.getConnection(
-                    PropertiesUtil.get(URL_KEY),
-                    PropertiesUtil.get(USER_NAME_KEY),
-                    PropertiesUtil.get(PASSWORD_KEY));
+            return DriverManager.getConnection(url, user, passwd);
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
     }
-    public static SessionFactory getSessionFactory() {
-        Configuration configuration = new Configuration();
-        configuration.configure();
-        configuration.addAnnotatedClass(User.class);
 
-        try {
-            sessionFactory = configuration.buildSessionFactory();
-            System.out.println("OK");
+        private static SessionFactory sessionFactory;
 
-        } catch (Exception e) {
-            System.out.println("Something went wrong:\n" + e);
-        }
-        return sessionFactory;
+        public static SessionFactory getSessionFactory() {
+
+            Configuration configuration = new Configuration();
+            configuration.setProperty("hibernate.connection.driver_class", "org.postgresql.Driver");
+            configuration.setProperty("hibernate.connection.url", "jdbc:postgresql://localhost:5432/postgres");
+            configuration.setProperty("hibernate.connection.username", "postgres");
+            configuration.setProperty("hibernate.connection.password", "postgres");
+            configuration.setProperty("hibernate.dialect", "org.hibernate.dialect.PostgreSQLDialect");
+            configuration.setProperty("hibernate.hbm2ddl.auto", "update");
+
+            configuration.addAnnotatedClass(User.class);
+
+            try {
+                sessionFactory = configuration.buildSessionFactory();
+                System.out.println("Ok");
+            } catch (Exception e) {
+                throw new RuntimeException("Failed to initialize Hibernate", e);
+
+            }
+            return sessionFactory;
     }
 }

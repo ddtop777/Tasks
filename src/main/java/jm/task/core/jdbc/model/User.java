@@ -1,32 +1,41 @@
 package jm.task.core.jdbc.model;
 
-import org.hibernate.annotations.Generated;
 
-import javax.persistence.*;
 
-@Entity
-@Table(name = "user2")
+
+
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
+
+//@Entity
+//@Table(name = "users")
 public class User {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+
+//    @Id
+//    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column
+//    @Column
     private String name;
 
-    @Column
-    private String lastName;
-
-    @Column
+//    @Column
     private Byte age;
 
-    public User() {
+//    @Column
+    private String email;
 
+    public User() {
     }
 
-    public User(String name, String lastName, Byte age) {
+    public User(String name, Byte age, String email) {
         this.name = name;
-        this.lastName = lastName;
+        this.email = email;
         this.age = age;
     }
 
@@ -46,12 +55,12 @@ public class User {
         this.name = name;
     }
 
-    public String getLastName() {
-        return lastName;
+    public String getEmail() {
+        return email;
     }
 
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public Byte getAge() {
@@ -63,6 +72,6 @@ public class User {
     }
     @Override
     public String toString() {
-        return String.format("User {id = '%s', name = '%s', lastName = '%s', age = '%d'}", getId(), getName(), getLastName(), getAge());
+        return String.format("User {id = '%s', name = '%s', email = '%s', age = '%d'}", getId(), getName(), getEmail(), getAge());
     }
 }
